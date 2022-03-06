@@ -1,3 +1,5 @@
+use serde::{Serialize, Deserialize};
+
 #[cfg(feature = "sides")]
 macro_rules! enum_str {
     (enum $name:ident {
@@ -28,4 +30,12 @@ enum_str! {
         south = 4,
         west = 5,
     }
+}
+
+#[cfg(feature = "item")]
+#[derive(Serialize, Deserialize, Debug, Default)]
+pub struct Item{
+    id: String,
+    #[allow(non_snake_case)]
+    Count: usize,
 }

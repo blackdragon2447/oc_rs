@@ -120,7 +120,7 @@ impl RPCBus {
         Ok(data)
     }
 
-    pub fn read_test<D: DeserializeOwned>(&mut self) -> io::Result<()> {
+    pub fn read_test(&mut self) -> io::Result<()> {
         self.poll.wait_one()?;
 
         let mut delim_buf = [0; DELIMITER.len()];

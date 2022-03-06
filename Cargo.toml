@@ -15,6 +15,7 @@ epoll-rs = "0.2.1"
 devices = [
     "redstone_interface",
     "sound_card",
+    "computer",
 ]
 
 redstone_interface = [
@@ -23,6 +24,12 @@ redstone_interface = [
 
 sound_card = []
 
+computer = [
+    "item"
+]
+
 sides = []
+
+item = []
 
 pretty_print = []

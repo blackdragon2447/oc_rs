@@ -3,11 +3,15 @@ pub mod device_bus;
 pub mod redstone_interface;
 #[cfg(feature = "sound_card")]
 pub mod sound_card;
+#[cfg(feature = "computer")]
+pub mod computer;
 
 #[cfg(feature = "redstone_interface")]
 pub use redstone_interface::RedstoneInterface;
 #[cfg(feature = "sound_card")]
 pub use sound_card::SoundCard;
+#[cfg(feature = "computer")]
+pub use computer::Computer;
 
 #[cfg(feature = "pretty_print")]
 use std::fmt::{Display, Formatter};
