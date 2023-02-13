@@ -1,9 +1,9 @@
+use epoll_rs::Epoll;
+use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
 use std::fs::{File, OpenOptions};
 use std::io;
 use std::io::{Read, Write};
-use epoll_rs::Epoll;
-use serde::{Serialize, Deserialize};
-use serde::de::DeserializeOwned;
 
 use crate::rpc_device::device_bus::os_stuff::setup_termios;
 use crate::rpc_device::{RPCDevice, RPCDeviceDescriptor, RPCDeviceMethod};
@@ -46,21 +46,20 @@ pub const DELIMITER: &[u8] = b"\0";
 impl RPCBus {
     pub fn init(path: &str) -> io::Result<Self> {
         let poll = Epoll::new()?;
-        let file: File = poll.add(
-            OpenOptions::new()
-                .read(true)
-                .write(true)
-                .create(true)
-                .open(path)?,
-            epoll_rs::Opts::IN,
-        )?.into_file();
+        let file: File = poll
+            .add(
+                OpenOptions::new()
+                    .read(true)
+                    .write(true)
+                    .create(true)
+                    .open(path)?,
+                epoll_rs::Opts::IN,
+            )?
+            .into_file();
 
         unsafe { setup_termios(&file) }?;
 
-        Ok(Self {
-            poll,
-            file,
-        })
+        Ok(Self { poll, file })
     }
 
     pub fn list(&mut self) -> io::Result<Vec<RPCDeviceDescriptor>> {
@@ -79,19 +78,28 @@ impl RPCBus {
         let list: BusReturn<bool> = self.read()?;
         if let BusReturn::Methods(methods) = list {
             Ok(methods)
-        } else { Err(io::ErrorKind::InvalidData.into()) }
+        } else {
+            Err(io::ErrorKind::InvalidData.into())
+        }
     }
 
     pub fn find(&mut self, name: &str) -> io::Result<RPCDevice> {
-        for RPCDeviceDescriptor { device_id, components } in self.list()? {
-            if components.into_iter().any(|dev| name == dev) { return Ok(device_id); }
+        for RPCDeviceDescriptor {
+            device_id,
+            components,
+        } in self.list()?
+        {
+            if components.into_iter().any(|dev| name == dev) {
+                return Ok(device_id);
+            }
         }
         Err(io::ErrorKind::NotFound.into())
     }
 
     pub fn write<D: Serialize>(&mut self, data: &D) -> io::Result<()> {
         self.file.write_all(DELIMITER)?;
-        serde_json::to_writer(&self.file, data).map_err::<io::Error, _>(|_| io::ErrorKind::InvalidData.into())?;
+        serde_json::to_writer(&self.file, data)
+            .map_err::<io::Error, _>(|_| io::ErrorKind::InvalidData.into())?;
         self.file.write_all(DELIMITER)?;
 
         self.file.flush()?;
@@ -181,11 +189,13 @@ mod os_stuff {
         let raw_fd: c_int = termios.as_raw_fd();
 
         #[allow(clippy::uninit_assumed_init)]
-            let mut termios: termios = mem::MaybeUninit::uninit().assume_init();
+        let mut termios: termios = mem::MaybeUninit::uninit().assume_init();
 
         match tcgetattr(raw_fd, &mut termios) {
             0 => (),
-            _ => { return Err(io::Error::last_os_error()); }
+            _ => {
+                return Err(io::Error::last_os_error());
+            }
         }
 
         cfmakeraw(&mut termios);

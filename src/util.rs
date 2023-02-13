@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "sides")]
 macro_rules! enum_str {
@@ -34,8 +34,9 @@ enum_str! {
 
 #[cfg(feature = "item")]
 #[derive(Serialize, Deserialize, Debug, Default)]
-pub struct Item{
+pub struct Item {
     id: String,
     #[allow(non_snake_case)]
-    Count: usize,
+    #[serde(rename = "Count")]
+    count: usize,
 }

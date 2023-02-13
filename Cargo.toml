@@ -12,6 +12,11 @@ epoll-rs = "0.2.1"
 
 [features]
 
+default = [
+    "devices",
+    "pretty_print"
+]
+
 devices = [
     "redstone_interface",
     "sound_card",
