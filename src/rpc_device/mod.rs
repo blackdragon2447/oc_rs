@@ -5,6 +5,8 @@ pub mod redstone_interface;
 pub mod sound_card;
 #[cfg(feature = "computer")]
 pub mod computer;
+#[cfg(feature = "file_transfer")]
+pub mod file_import_export_card;
 
 #[cfg(feature = "redstone_interface")]
 pub use redstone_interface::RedstoneInterface;
@@ -12,6 +14,8 @@ pub use redstone_interface::RedstoneInterface;
 pub use sound_card::SoundCard;
 #[cfg(feature = "computer")]
 pub use computer::Computer;
+#[cfg(feature = "file_transfer")]
+pub use file_import_export_card::FileImportExportCard;
 
 #[cfg(feature = "pretty_print")]
 use std::fmt::{Display, Formatter};

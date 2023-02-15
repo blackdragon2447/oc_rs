@@ -36,7 +36,19 @@ enum_str! {
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Item {
     id: String,
-    #[allow(non_snake_case)]
     #[serde(rename = "Count")]
     count: usize,
+}
+
+#[cfg(feature = "file_transfer")]
+#[derive(Serialize, Deserialize, Debug, Default)]
+pub struct ImportedFileInfo {
+    name: String,
+    size: usize,
+}
+
+impl ImportedFileInfo {
+    pub fn get_name(&self) -> String {
+        self.name.clone()
+    }
 }

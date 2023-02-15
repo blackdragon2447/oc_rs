@@ -9,29 +9,21 @@ serde = { version = "1.0.136", features = ["derive"] }
 serde_json = "1.0.79"
 uuid = { version = "0.8.2", features = ["serde"] }
 epoll-rs = "0.2.1"
+anyhow = "1.0.69"
 
 [features]
 
-default = [
-    "devices",
-    "pretty_print"
-]
+default = ["devices", "pretty_print"]
 
-devices = [
-    "redstone_interface",
-    "sound_card",
-    "computer",
-]
+devices = ["redstone_interface", "sound_card", "computer", "file_transfer"]
 
-redstone_interface = [
-    "sides"
-]
+redstone_interface = ["sides"]
 
 sound_card = []
 
-computer = [
-    "item"
-]
+computer = ["item"]
+
+file_transfer = []
 
 sides = []
 

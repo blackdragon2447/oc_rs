@@ -117,6 +117,40 @@ impl RPCBus {
         }
 
         let mut deserializer = serde_json::Deserializer::from_reader(&mut self.file);
+        // currently errors (missing field data, l1 c17) (Sometimes)
+        // This seems to be a result of the other side sending `{"type": "result"}` instead of
+        // `{"type": "result", "data": D}`.
+        let data = D::deserialize(&mut deserializer)?;
+
+        let mut delim_buf = [0; DELIMITER.len()];
+        let read = self.file.read(&mut delim_buf)?;
+        if read != DELIMITER.len() || delim_buf != DELIMITER {
+            return Err(io::ErrorKind::UnexpectedEof.into());
+        }
+        Ok(data)
+    }
+
+    pub fn read_debug<D: DeserializeOwned>(&mut self) -> io::Result<D> {
+        self.poll.wait_one()?;
+
+        let mut delim_buf = [0; DELIMITER.len()];
+        let read = self.file.read(&mut delim_buf)?;
+        if read != DELIMITER.len() || delim_buf != DELIMITER {
+            return Err(io::ErrorKind::UnexpectedEof.into());
+        }
+
+        println!("debug");
+
+        let mut buf: [u8; 1] = [0; DELIMITER.len()];
+        let _ = self.file.read(&mut buf)?;
+        while buf != DELIMITER {
+            print!("{}", String::from_utf8_lossy(&buf));
+            let _ = self.file.read(&mut buf)?;
+        }
+
+        println!("debug");
+
+        let mut deserializer = serde_json::Deserializer::from_reader(&mut self.file);
         //currently errors (missing field data, l1 c17)
         let data = D::deserialize(&mut deserializer)?;
 
@@ -148,7 +182,7 @@ impl RPCBus {
         let mut delim_buf = [128; DELIMITER.len()];
 
         while delim_buf != DELIMITER {
-            let read = self.file.read(&mut delim_buf)?;
+            let _read = self.file.read(&mut delim_buf)?;
             print!("{}", String::from_utf8_lossy(&delim_buf))
         }
 
