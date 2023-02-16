@@ -1,0 +1,39 @@
+[package]
+name = "oc_rs"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.tml
+[dependencies]
+serde = { version = "1.0.136", features = ["serde_derive"], default-features = false }
+serde_json = "1.0.79"
+uuid = { version = "0.8.2", features = ["serde"], default-features = false }
+epoll-rs = "0.2.1"
+anyhow = "1.0.69"
+
+[features]
+
+default = [ "pretty_print", "devices" ]
+
+devices = ["redstone_interface", "sound_card", "computer", "file_transfer"]
+
+redstone_interface = ["sides"]
+
+sound_card = []
+
+computer = ["item"]
+
+file_transfer = []
+
+sides = []
+
+item = []
+
+pretty_print = []

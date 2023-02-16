@@ -1,0 +1,21 @@
+[build]
+# rustflags = "-C relocation-model=static -C linker-flavor=gcc -C target-feature=+crt-static"
+# target = "riscv64gc-unknown-linux-musl"
+
+[target.riscv64gc-unknown-linux-gnu]
+linker = "riscv64-linux-gnu-gcc"
+
+[target.riscv64gc-unknown-linux-musl]
+linker = "/usr/bin/clang"
+rustflags = [
+    "-C", "link-arg=--ld-path=/usr/bin/mold",
+    "-C", "link-arg=--target=riscv64-unknown-linux-musl",
+    "-C", "target-feature=-crt-static",
+    "-C", "link-arg=--sysroot=/home/blackdragon2447/x-tools/riscv64-unknown-linux-musl/riscv64-unknown-linux-musl/sysroot/",
+    # "-L", "/home/blackdragon2447/x-tools/riscv64-unknown-linux-musl/riscv64-unknown-linux-musl/sysroot/lib/",
+    # "-L", "/home/blackdragon2447/x-tools/riscv64-unknown-linux-musl/lib/gcc/riscv64-unknown-linux-musl/11.2.0/",
+    # "-L", "/home/blackdragon2447/x-tools/riscv64-unknown-linux-musl/riscv64-unknown-linux-musl/sysroot/usr/lib",
+
+]
+# ar = "/home/blackdragon2447/x-tools/riscv64-unknown-linux-musl/bin/riscv64-unknown-linux-musl-ar"
+# linker = "/home/blackdragon2447/x-tools/riscv64-unknown-linux-musl/bin/riscv64-unknown-linux-musl-gcc"

@@ -1,2 +1,6 @@
 /target
 Cargo.lock
+
+.idea
+
+/oc-rs-cli-bob
